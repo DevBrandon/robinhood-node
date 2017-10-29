@@ -332,21 +332,35 @@ function RobinhoodWebApi(opts, callback) {
 
   //Added by DevBrandonJ
   api.watchlists_list_with_symbols = function (callback) {
+    var symbols = [];
     api.watchlists_list(function (err, response, body) {
       if (err) {
         console.error(err);
       } else {
-        for (var i = 0; i < Object.keys(body.results).length; i++) {
+        
+        for (var i = 0, len=Object.keys(body.results).length; i < len; i++) {
           api.instrument_to_symbol(body.results[i].instrument, function(err, response, body){
             if(err){
                 console.error(err);
             }else{
-                console.log(body.symbol);
+               
+                
+                if(i >= len){
+                  //symbols.push(body.symbol);
+                  var res = body.symbol.split(" ");
+                  callback(res);
+                 // console.log(symbols);
+                 //console.log(body.symbol);
+
+                }
             }
+            
         })
         }
+       //none
       }
     })
+    return symbols;
   };
 //Added by DevBrandonJ
   api.instrument_to_symbol = function (instrument, callback) {
